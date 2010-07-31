@@ -1,0 +1,142 @@
+<!--suppress XmlUnboundNsPrefix -->
+<lift:surround with="jinrou_domi_sub" at="content">
+  <head>
+    <script id="main" src="js/jinrouuser.js" type="text/javascript"></script>
+  </head>
+  <lift:JinrouUserController.manage form="POST">
+    <div align="jinrouuser manage">
+      <fieldset>
+      <legend>居民資料</legend>
+
+      <h5>註冊玩家擁有額外功能：建立村莊、使用主聊天視窗、上傳圖片等。</h5>
+
+      <table>
+        <tr>
+          <td>
+            <table>
+              <tr>
+                <td class="center">帳號名稱</td>
+                <td>
+                  <entry:uname/>
+                </td>
+                <td><span class="small">登入用的「帳號名稱」</span></td>
+              </tr>
+
+              <tr>
+                <td class="center">Trip</td>
+                <td>
+                  <entry:trip/>
+                </td>
+                <td><span class="small"></span></td>
+              </tr>
+
+              <tr>
+                <td class="center">暱稱</td>
+                <td>
+                  <entry:handle_name/>
+                </td>
+                <td><span class="small">在村中所表示的「暱稱」</span></td>
+              </tr>
+
+              <tr>
+                <td class="center">密碼</td>
+                <td>
+                  <entry:password/>
+                </td>
+                <td><span class="small">登入所使用的密碼</span></td>
+              </tr>
+
+              <tr>
+                <td class="center">重新輸入密碼</td>
+                <td>
+                  <entry:repassword/>
+                </td>
+                <td><span class="small">必須和密碼一致</span></td>
+              </tr>
+
+              <tr>
+                <td class="center">性別</td>
+                <td>
+                  <entry:sex/>
+                </td>
+                <td><span class="small"></span></td>
+              </tr>
+
+              <tr>
+                <td class="center">電子信箱</td>
+                <td>
+                  <entry:email id="email"/>
+                </td>
+                <td><span class="small"></span></td>
+              </tr>
+
+              <tr>
+                <td class="center">MSN</td>
+                <td>
+                  <entry:msn id="msn"/>
+                </td>
+                <td><span class="small"><input id="copy_email2msn" type="button" value="和信箱相同"/></span></td>
+              </tr>
+
+
+              <tr>
+                <td class="center">星座</td>
+                <td>
+                  <entry:zodiac/>
+                </td>
+                <td><span class="small"></span></td>
+              </tr>
+
+              <tr>
+                <td class="center">備註</td>
+                <td>
+                  <entry:memo/>
+                </td>
+                <td><span class="small">(自我介紹、經驗專長、其他常用暱稱及trip、遊戲展望等)</span></td>
+              </tr>
+              
+              <tr>
+                <td class="center"><img id="captcha" src="./captcha" alt=""/></td>
+                <td>
+                  <entry:captcha/>
+                </td>
+                <td><span class="small">(驗證碼)</span>　<a id="reload_captcha" href="#">重新產生</a></td>
+              </tr>
+
+              <tr>
+                <td colspan="3" class="center">
+                  <entry:submit/>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <lift:msgs showAll="true" />
+          </td>
+        </tr>
+
+        <!--
+        <tr>
+          <td>
+            <fieldset style="border-color:black;border-width:1px;border-style:dotted;">
+              <legend><strong style="font-size:20px;font-weight:bold;"><img src="images/user_regist_icon.gif"/></strong>
+              </legend>
+              <entry:user_icon/>
+            </fieldset>
+          </td>
+        </tr>
+        -->
+
+        <tr>
+          <td>
+            <br/>
+          </td>
+        </tr>
+      </table>
+      </fieldset>  
+    </div>
+    </lift:JinrouUserController.manage>
+</lift:surround>

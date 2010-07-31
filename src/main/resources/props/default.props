@@ -1,0 +1,8 @@
+db.url=jdbc:mysql://localhost/jinrou_domi
+db.driver=com.mysql.jdbc.Driver
+db.user=jinrou_domi
+db.password=jinrou_domi0000
+
+mail.host=smtp.gmail.com
+mail.user=jinrou.domi
+mail.password=jinrou_domi0000
