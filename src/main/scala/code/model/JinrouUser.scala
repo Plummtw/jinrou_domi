@@ -31,7 +31,7 @@ class JinrouUser extends LongKeyedMapper[JinrouUser] with IdPK {
     override def validations = validPriority _ :: super.validations
 
     def validPriority(in: String): List[FieldError] =
-      List(if (in.length() <= 6)       List(FieldError(this, <b>帳號過短＜６</b>))
+      List(if (in.length() <  6)       List(FieldError(this, <b>帳號過短＜６</b>))
            else if (in.length() > 20)  List(FieldError(this, <b>帳號過長＞２０</b>))
            else Nil,
            if (JinrouUtil.hasHtmlCode(in)) List(FieldError(this, <b>帳號包含控制碼</b>))
@@ -43,7 +43,7 @@ class JinrouUser extends LongKeyedMapper[JinrouUser] with IdPK {
     override def validations = validPriority _ :: super.validations
 
     def validPriority(in: String): List[FieldError] =
-      List(if (in.length() <= 0)       List(FieldError(this, <b>暱稱過短＜６</b>))
+      List(if (in.length() <  0)       List(FieldError(this, <b>暱稱過短＜１</b>))
            else if (in.length() > 20)  List(FieldError(this, <b>暱稱過長＞２０</b>))
            else Nil,
            if (JinrouUtil.hasHtmlCode(in)) List(FieldError(this, <b>暱稱包含控制碼</b>))
@@ -54,7 +54,7 @@ class JinrouUser extends LongKeyedMapper[JinrouUser] with IdPK {
     override def validations = validPriority _ :: super.validations
 
     def validPriority(in: String): List[FieldError] =
-      List(if (in.length() <= 6)       List(FieldError(this, <b>ｔｒｉｐ過短＜６</b>))
+      List(if (in.length() <  6)       List(FieldError(this, <b>ｔｒｉｐ過短＜６</b>))
            else if (in.length() > 20)  List(FieldError(this, <b>ｔｒｉｐ過長＞２０</b>))
            else Nil,
            if (JinrouUtil.hasHtmlCode(in)) List(FieldError(this, <b>ｔｒｉｐ包含控制碼</b>))
@@ -168,4 +168,8 @@ object JinrouUser extends JinrouUser with LongKeyedMetaMapper[JinrouUser] {
   override def fieldOrder = List(id, uname, handle_name, trip, password, sex, email, msn,
                                    zodiac, //user_icon_id,
                                    user_score, user_flags, created_ip, created, updated)
+}
+
+object JinrouUser_System extends JinrouUser {
+  handle_name("系統")
 }

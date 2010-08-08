@@ -70,6 +70,25 @@
             <fieldset>
               <legend>主聊天視窗(Main Chat)</legend>
               <div class="main-chat">
+                <lift:comet type="Chat" name="Other">
+                  <chat:input>
+                    　<chat:input/>
+                    <chat:css_string/>
+                    <chat:submit/>
+                  </chat:input>                  
+
+                  <chat:body>
+	                <table chat:id="na">
+	                  <chat:list>
+	                    <tr>
+                        <td><list:when/></td>
+                        <td><list:who/></td>
+                        <td><list:message/></td>
+                      </tr>
+	                  </chat:list>
+	                </table>
+                  </chat:body>
+                </lift:comet>
               </div>
             </fieldset>
 		        </p>

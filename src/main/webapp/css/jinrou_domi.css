@@ -39,5 +39,13 @@ noscript { /* JavaScript 未開啟時的警告 */
 
 .small {font-size: 8pt; }
 
+.chat1 {font-size: 20pt; font-weight: bold; }
+.chat2 {font-size: 16pt; }
+.chat3 {font-size: 12pt; }
+.chat4 {font-size: 8pt; }
+
+.red  { color: #FF0000; }
+.blue { color: #0000FF; }
+
 .parrot { color: #FF7700; }
 .godfat { color: #BB0077; }

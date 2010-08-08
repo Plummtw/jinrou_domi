@@ -29,9 +29,9 @@ class JinrouUserController extends DispatchSnippet {
     case "status" =>
       xhtml => status_out(chooseTemplate("choose", "status_out", xhtml))
 
-    case "manage" if CurrentJinrouUser.isDefined => edit _
+    case "manage" if CurrentJinrouUser.isDefined => add_edit(false)
 
-    case "manage"  => add _
+    case "manage"  => add_edit(true)
   }
 
   def status_in (xhtml : NodeSeq) : NodeSeq = {
@@ -79,9 +79,9 @@ class JinrouUserController extends DispatchSnippet {
     var trip     = ""
 
     def check_login()  {
-      println("Uname : " + uname)
-      println("Passw : " + password)
-      println("Trip  : " + trip)
+      //println("Uname : " + uname)
+      //println("Passw : " + password)
+      //println("Trip  : " + trip)
 
       // 先檢查失敗的紀錄
       val calendar = Calendar.getInstance()
@@ -102,8 +102,8 @@ class JinrouUserController extends DispatchSnippet {
       }
 
       // 輸入 ID, Trip, PASSWORD 登入
-      println(JinrouUtil.generateSHA1(password.trim()).substring(0,20))
-      println(JinrouUtil.generateSHA1_php(trip.trim()).substring(1,9))
+      //println(JinrouUtil.generateSHA1(password.trim()).substring(0,20))
+      //println(JinrouUtil.generateSHA1_php(trip.trim()).substring(1,9))
 
       JinrouUser.find(By(JinrouUser.uname, uname),
                       By(JinrouUser.password, JinrouUtil.generateSHA1(password.trim()).substring(0,20)),
@@ -111,7 +111,8 @@ class JinrouUserController extends DispatchSnippet {
         case Full(xs) => JinrouUserLogin.find(By(JinrouUserLogin.jinrouuser_id, xs.id.is), OrderBy(JinrouUserLogin.created, Descending)) match {
                             case Full(xy) => xs.last_login(xy.created.is)
                                              xs.save
-                            case _        => ;
+                                             S.notice(<b>新增成功</b>)
+                            case _        =>
                           }
                           JinrouUserLogin.create_record(xs.id.is, uname, JinrouUserLoginEnum.LOGIN)
                           CurrentJinrouUser.set(Full(xs))
@@ -123,6 +124,7 @@ class JinrouUserController extends DispatchSnippet {
     }
 
 
+    //val text_size = ("size" -> "10", "maxlength" -> "20")
     bind("jinrouuser", xhtml,
       "uname"         -> SHtml.text(uname, uname = _, "size"->"10", "maxlength"->"20"),
       "trip"          -> SHtml.text(trip, trip = _ , "size"->"10", "maxlength"->"20"),
@@ -132,45 +134,27 @@ class JinrouUserController extends DispatchSnippet {
     )
   }
 
-  def add (xhtml : NodeSeq) : NodeSeq = {
+  private def add_edit(is_new : Boolean)(xhtml : NodeSeq) : NodeSeq = {
     // 參數
-    var jinrouuser      = JinrouUser.create
-    //var uname          = ""
-    //var handle_name    = ""
-    //var trip           = ""
-    //var password       = ""
-    var repassword     = ""
-    //var email          = ""
-    //var sex            = "M"
+    var jinrouuser : JinrouUser = null
+    var old_password    = ""
+    var repassword      = ""
     var captcha        = ""
     //var user_icon_id   = 1
 
     def create_user () {
-      //println("Captcha : " + ChineseCaptchaAnswer.is)
-      //val user_icon_id : Long =
-      //  try { user_icon.toLong }
-      //  catch { case e: Exception => 2 }
-
       var is_error = false
       if ( captcha != ChineseCaptchaAnswer.is ) {
         S.error(<b>驗證碼錯誤 答案：{ChineseCaptchaAnswer.is} 你輸入：{captcha} </b>)
         is_error = true
       }
 
-
       if ( jinrouuser.password != repassword ) {
         S.error(<b>密碼不一致</b>)
         is_error = true
       }
 
-
       // 欄位檢核
-      //val trip_value =
-      //  if (trip == "") "" else JinrouUtil.generateSHA1_php(trip.trim()).substring(1,9)
-      //val jinrouuser = JinrouUser.create.uname(uname.trim()).handle_name(handle_name.replace('　',' ').trim()).sex(sex)
-      //                            .trip(trip_value)
-      //                            .password(JinrouUtil.generateSHA1(password.trim()).substring(0,20))
-
       jinrouuser.validate match {
         case Nil => ;
         case xs  => is_error = true
@@ -198,46 +182,7 @@ class JinrouUserController extends DispatchSnippet {
         S.notice(<b>註冊成功</b>)
         redirectTo("main.html")
       }
-
     }
-
-    val jinrouuser_r = JinrouUserRequest.is
-    jinrouuser_r match {
-      case Full(xs) => jinrouuser.handle_name(xs.handle_name.is)
-                       .sex(xs.sex.is)
-                       .email(xs.email.is)
-                       .msn(xs.msn.is)
-                       .zodiac(xs.zodiac.is)
-                       .user_memo(xs.user_memo.is)
-      case _        => ;
-    }
-
-    bind("entry", xhtml,
-      "uname"         -> SHtml.text(jinrouuser.uname,          jinrouuser.uname(_), "size"->"40", "maxlength"->"30"),
-      "handle_name"  -> SHtml.text(jinrouuser.handle_name,    jinrouuser.handle_name(_), "size"->"40", "maxlength"->"30"),
-      "trip"          -> SHtml.text("",                        jinrouuser.trip(_), "size"->"40", "maxlength"->"30"),
-      "password"     -> SHtml.password("",                    jinrouuser.password(_), "size"->"40", "maxlength"->"30"),
-      "repassword"   -> SHtml.password("",                    repassword = _, "size"->"40", "maxlength"->"30"),
-      "sex"           -> jinrouuser.sex.generateHtml,
-      "email"         -%> SHtml.text(jinrouuser.email,          jinrouuser.email(_), "size"->"40", "maxlength"->"80"),
-      "msn"           -%> SHtml.text(jinrouuser.msn,            jinrouuser.msn(_), "size"->"40", "maxlength"->"80"),
-      //"male"          -> sex_radios(0),
-      //"female"       -> sex_radios(1),
-      "zodiac"        -> jinrouuser.zodiac.generateHtml,
-      "memo"          -> SHtml.textarea(jinrouuser.user_memo,  jinrouuser.user_memo(_), "size"->"40", "rows"->"5", "cols"->"70","wrap"->"soft"),
-      "captcha"       -> SHtml.text("",                        captcha = _, "size"->"40", "maxlength"->"80"),
-      //"user_icon_id"  -> SHtml.textarea(dummy_last_words,  dummy_last_words = _, "rows"->"3","cols"->"70","wrap"->"soft"),
-      "submit"        -> SHtml.submit(" 建  立 ",  create_user)
-    )
-  }
-
-  def edit (xhtml : NodeSeq) : NodeSeq = {
-    // 參數
-    var jinrouuser : JinrouUser = null
-    var old_password    = ""
-    var repassword      = ""
-    var captcha        = ""
-    //var user_icon_id   = 1
 
     def update_user () {
       var is_error = false
@@ -246,7 +191,6 @@ class JinrouUserController extends DispatchSnippet {
         is_error = true
       }
 
-
       if ( jinrouuser.password != repassword ) {
         S.error(<b>密碼不一致</b>)
         is_error = true
@@ -254,12 +198,6 @@ class JinrouUserController extends DispatchSnippet {
 
 
       // 欄位檢核
-      //val trip_value =
-      //  if (trip == "") "" else JinrouUtil.generateSHA1_php(trip.trim()).substring(1,9)
-      //val jinrouuser = JinrouUser.create.uname(uname.trim()).handle_name(handle_name.replace('　',' ').trim()).sex(sex)
-      //                            .trip(trip_value)
-      //                            .password(JinrouUtil.generateSHA1(password.trim()).substring(0,20))
-
       jinrouuser.validate match {
         case Nil => ;
         case xs  => is_error = true
@@ -281,25 +219,31 @@ class JinrouUserController extends DispatchSnippet {
       }
     }
 
-    CurrentJinrouUser.is match {
-      case Full(xs) => jinrouuser = xs
-      case _        => return redirectTo("main.html")
-    }
+    if (!is_new)
+      CurrentJinrouUser.is match {
+        case Full(xs) => jinrouuser = xs
+        case _        => return redirectTo("main.html")
+      }
 
     val jinrouuser_r = JinrouUserRequest.is
     jinrouuser_r match {
-      case Full(xs) => jinrouuser.uname(xs.uname.is)
-                       .handle_name(xs.handle_name.is)
-                       .sex(xs.sex.is)
-                       .email(xs.email.is)
-                       .msn(xs.msn.is)
-                       .zodiac(xs.zodiac.is)
-                       .user_memo(xs.user_memo.is)
-      case _        => ;
+      case Full(xs) => if (is_new) {
+                          jinrouuser = JinrouUser.create
+                          jinrouuser.uname(xs.uname.is)
+                        }
+                        jinrouuser.handle_name(xs.handle_name.is)
+                        .sex(xs.sex.is)
+                        .email(xs.email.is)
+                        .msn(xs.msn.is)
+                        .zodiac(xs.zodiac.is)
+                        .user_memo(xs.user_memo.is)
+      case _        =>  if (is_new)
+                           jinrouuser = JinrouUser.create
     }
 
     bind("entry", xhtml,
-      "uname"         -> <span>{jinrouuser.uname}</span>,
+      "uname"         -> (if (is_new)  SHtml.text(jinrouuser.uname,          jinrouuser.uname(_), "size"->"40", "maxlength"->"30")
+                           else <span>{jinrouuser.uname}</span>),
       "handle_name"  -> SHtml.text(jinrouuser.handle_name,    jinrouuser.handle_name(_), "size"->"40", "maxlength"->"30"),
       "trip"          -> SHtml.text("",                        jinrouuser.trip(_), "size"->"40", "maxlength"->"30"),
       "password"     -> SHtml.password("",                    jinrouuser.password(_), "size"->"40", "maxlength"->"30"),
@@ -313,7 +257,8 @@ class JinrouUserController extends DispatchSnippet {
       "memo"          -> SHtml.textarea(jinrouuser.user_memo,  jinrouuser.user_memo(_), "size"->"40", "rows"->"5", "cols"->"40","wrap"->"soft"),
       "captcha"       -> SHtml.text("",                        captcha = _, "size"->"40", "maxlength"->"80"),
       //"user_icon_id"  -> SHtml.textarea(dummy_last_words,  dummy_last_words = _, "rows"->"3","cols"->"70","wrap"->"soft"),
-      "submit"        -> SHtml.submit(" 修  改 ",  update_user)
+      "submit"         -> (if (is_new) SHtml.submit(" 建  立 ",  create_user)
+                            else        SHtml.submit(" 修  改 ",  update_user))
     )
   }
 }
