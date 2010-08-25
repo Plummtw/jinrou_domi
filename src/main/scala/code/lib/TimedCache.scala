@@ -30,6 +30,19 @@ class TimedCache[U, V](val timeout : Int) {
     }
   }
 
+  var removeNotifier : () => Unit = null
+
+  def getOr(key : U)(func : () => V) : V = {
+    get(key) match {
+      case Some(x) => x
+      case None    => val data = func()
+                      put(key, data)
+                      data
+    }
+  }
+
+
+
   var is_thread_stop = false
 
   val thread = new Thread {
@@ -44,8 +57,11 @@ class TimedCache[U, V](val timeout : Int) {
           val time_now = (new Date()).getTime()
           map.foreach { t =>
             val data = t._2
-            if (time_now - data.access_time.getTime() > timeout)
+            if (time_now - data.access_time.getTime() > timeout) {
+              if (removeNotifier != null)
+                removeNotifier()
               map.remove(t._1)
+            }
           }
         }
       }

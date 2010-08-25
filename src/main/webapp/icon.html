@@ -1,4 +1,28 @@
 <!--suppress XmlUnboundNsPrefix -->
 <lift:surround with="jinrou_domi_sub" at="content">
-<h4>施工中</h4>
+<div class="link"><a href="icon_upload.html">←頭像上傳</a></div>
+  <fieldset><legend>頭像一覽</legend>
+    <table>
+      <lift:snippet type="UserIconController:all">
+        <icons_tr:icons_td>
+          <tr>
+          <icons_td:icon>
+            <td>
+              <icon:img/>
+            </td>
+            <td>
+              <icon:id/><br/><icon:name/><br/><icon:color/>
+            </td>
+          </icons_td:icon>
+          </tr>
+        </icons_tr:icons_td>
+      </lift:snippet>
+    </table>
+    <div>
+      <lift:snippet type="UserIconController:paginate">
+        <p><nav:records/></p>
+        <nav:first/> | <nav:prev/> | <nav:allpages> | </nav:allpages> | <nav:next/> | <nav:last/>
+      </lift:snippet>
+    </div>
+  </fieldset>
 </lift:surround>

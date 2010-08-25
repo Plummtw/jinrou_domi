@@ -19,8 +19,8 @@ import collection.mutable.HashMap
 
 object ChatCss {
   val chat_map  = HashMap("chat1 red" -> "強勢發言(紅)", "chat1" -> "強勢發言",
-                            "chat2" -> "稍強發言", "chat3" -> "普通發言",
-                            "chat4" -> "小聲發言", "chat4 blue" -> "小聲發言(藍)")
+                          "chat2" -> "稍強發言", "chat3" -> "普通發言",
+                          "chat4" -> "小聲發言", "chat4 blue" -> "小聲發言(藍)")
   val chat_list = List("chat1 red", "chat1", "chat2", "chat3", "chat4", "chat4 blue")
   val chat_seq_pair = chat_list.map(x => (x,chat_map.get(x).getOrElse("")))
 
