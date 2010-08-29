@@ -168,6 +168,11 @@ object JinrouUser extends JinrouUser with LongKeyedMetaMapper[JinrouUser] {
   override def fieldOrder = List(id, uname, handle_name, trip, password, sex, email, msn,
                                    zodiac, //user_icon_id,
                                    user_score, user_flags, created_ip, created, updated)
+
+  def is_logined = CurrentJinrouUser.is match {
+    case Full(user) => true
+    case _          => false
+  }
 }
 
 object JinrouUser_System extends JinrouUser {

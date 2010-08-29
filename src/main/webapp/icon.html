@@ -1,6 +1,10 @@
 <!--suppress XmlUnboundNsPrefix -->
 <lift:surround with="jinrou_domi_sub" at="content">
-<div class="link"><a href="icon_upload.html">←頭像上傳</a></div>
+<table align="center">
+  <tr>
+    <td><div class="link"><a href="icon_upload.html">←頭像上傳</a></div></td>
+  </tr>
+  <tr><td>
   <fieldset><legend>頭像一覽</legend>
     <table>
       <lift:snippet type="UserIconController:all">
@@ -25,4 +29,6 @@
       </lift:snippet>
     </div>
   </fieldset>
+  </td></tr>  
+</table>
 </lift:surround>

@@ -66,6 +66,7 @@ class Boot {
     LiftRules.early.append(makeUtf8)
 
     //LiftRules.loggedInTest = Full(() => User.loggedIn_?)
+    LiftRules.handleMimeFile = OnDiskFileParamHolder.apply
 
     S.addAround(DB.buildLoanWrapper)
   }

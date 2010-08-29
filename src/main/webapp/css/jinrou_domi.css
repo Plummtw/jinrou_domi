@@ -23,6 +23,8 @@ body {
   background-attachment: fixed; */
 }
 img { border: 0; }
+table img{border: 1px solid;}
+
 fieldset {
   margin-bottom: 10px;
   border: 1px solid #BBBBFF;

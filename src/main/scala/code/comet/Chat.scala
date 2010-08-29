@@ -56,7 +56,7 @@ class Chat extends CometActor with CometListener {
   // render the input area by binding the
   // appropriate dynamically generated code to the
   // view supplied by the template
-  override lazy val fixedRender: Box[NodeSeq] = {
+  override def fixedRender: Box[NodeSeq] = {
     var message = ""
     var css_string = ""
 
@@ -69,22 +69,22 @@ class Chat extends CometActor with CometListener {
       JsCmds.Noop
     }
 
+    println (CurrentJinrouUser.isDefined)
     ajaxForm(//After(100, SetValueAndFocus(infoIn, "")),
              bind("chat", inputArea,
                   "input" -> text("", message = _, "id" -> infoIn, "size" -> "40"),
                   "css_string" -> ChatCss.generateHtml(css_string = _),
                   "submit"-> ajaxSubmit("送出", ajaxSendMessage)))
-
   }
 
   // send a message to the chat server
   private def sendMessage(message: String, css_string: String) = {
     println("SendMessage : " + message + " " + css_string)
     CurrentJinrouUser.is match {
-    case Full(user) => ChatServer ! ChatServerMsg(user, new JinrouChat(message, css_string))
-    case _          =>
+      case Full(user) => ChatServer ! ChatServerMsg(user, new JinrouChat(message, css_string))
+      case _          =>
+    }
   }
-}
 
 
   // display a line
